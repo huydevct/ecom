@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AddProductNewCartRequest;
 use App\Http\Requests\AddToCartRequest;
+use App\Http\Requests\ShowCartRequest;
 use App\Models\Cart;
 use App\Models\Product;
 
@@ -17,7 +18,7 @@ class CartController extends Controller
         $this->productModel = $productModel;
     }
 
-    public function addToExsitedCart(AddToCartRequest $request){
+    public function addProductToCart(AddToCartRequest $request){
         $productId = $request['product_id'];
         $userId = auth()->user()->id;
         if ($request['cart_id'] == null){
@@ -46,5 +47,11 @@ class CartController extends Controller
         }
 
         return response()->json(['message' => 'Add product to cart failed'], 500);
+    }
+
+    public function showCart(ShowCartRequest $request){
+        $cartId = $request['cart_id'];
+        $result = $this->cartModel->listCartById($cartId);
+        return response()->json(['data' => $result], 200);
     }
 }
