@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateUserRequest;
 use App\Models\User;
+use http\Env\Response;
 
 class UserController extends Controller
 {
@@ -13,14 +14,13 @@ class UserController extends Controller
         $this->userModel = $userModel;
     }
 
-    public function addUser(CreateUserRequest $request){
-        dd($request);
-        try {
-            dd($request);
-            $request = $request->validated();
-            $this->userModel->create($request);
-        }catch (\Exception $e){
-            dd($e->getMessage());
-        }
-    }
+//    public function addUser(CreateUserRequest $request){
+//        try {
+//            $request = $request->validated();
+//            $this->userModel->addUser($request);
+//            return response()->json('create user success');
+//        }catch (\Exception $e){
+//            dd($e->getMessage());
+//        }
+//    }
 }

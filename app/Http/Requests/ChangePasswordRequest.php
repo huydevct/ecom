@@ -6,20 +6,13 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
-class CreateUserRequest extends FormRequest
+class ChangePasswordRequest extends FormRequest
 {
-//    public function authorize(){
-//        return true;
-//    }
-
-    public function rules(){
+    public function rules()
+    {
         return [
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'address' => 'required',
-            'email' => 'required',
-            'phone_number' => 'required',
-            'password' => 'required'
+            'old_password' => 'required|string|min:6',
+            'new_password' => 'required|string|confirmed|min:6',
         ];
     }
 

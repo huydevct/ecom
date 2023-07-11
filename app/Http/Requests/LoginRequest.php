@@ -6,19 +6,11 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
-class CreateUserRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
-//    public function authorize(){
-//        return true;
-//    }
-
     public function rules(){
         return [
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'address' => 'required',
             'email' => 'required',
-            'phone_number' => 'required',
             'password' => 'required'
         ];
     }

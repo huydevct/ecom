@@ -6,20 +6,16 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
-class CreateUserRequest extends FormRequest
+class AddToCartRequest extends FormRequest
 {
-//    public function authorize(){
-//        return true;
-//    }
+    public function authorize(){
+        return true;
+    }
 
     public function rules(){
         return [
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'address' => 'required',
-            'email' => 'required',
-            'phone_number' => 'required',
-            'password' => 'required'
+            'product_id' => 'required',
+            'cart_id' => 'required',
         ];
     }
 
