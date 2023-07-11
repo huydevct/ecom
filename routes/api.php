@@ -33,5 +33,5 @@ Route::group([
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
     Route::post('/change-pass', [AuthController::class, 'changePassWord']);
 
-    Route::post('/addToCart', [CartController::class, 'addToCart']);
+    Route::post('/add-to-cart', [CartController::class, 'addToExsitedCart']);
 });
