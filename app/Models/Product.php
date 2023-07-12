@@ -13,12 +13,12 @@ class Product extends Model
         return $product;
     }
 
-    public function decreaseOne($productId)
+    public function decrease($productId, $amount)
     {
         $productFromDB = DB::table('products')->where('id', $productId)->first();
         if ($productFromDB == null) {
             return "Product not found";
         }
-        return DB::table('products')->where('id', $productId)->update(['stock' => $productFromDB->stock - 1]);
+        return DB::table('products')->where('id', $productId)->update(['stock' => $productFromDB->stock - $amount]);
     }
 }

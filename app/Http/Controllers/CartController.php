@@ -20,16 +20,23 @@ class CartController extends Controller
 
     public function addProductToCart(AddToCartRequest $request){
         $productId = $request['product_id'];
-        $userId = auth()->user()->id;
+        $amount = $request['amount'];
+        $userId = optional(auth()->user())->id;
+        if($userId == 0){
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
         if ($request['cart_id'] == null){
             $product = $this->productModel->getOneProduct($productId);
             if ($product == null){
                 return response()->json(['message'=> 'Product not found'], 400);
             }
 
-            $result = $this->cartModel->addProductToNewCart($productId, $userId);
+            if ($product->stock < $amount){
+                return response()->json(['message'=> 'Product is not enough'], 400);
+            }
+
+            $result = $this->cartModel->addProductToNewCart($productId, $userId, $amount);
             if ($result == null){
-                $this->productModel->decreaseOne($productId);
                 return response()->json(['message' => 'Add product to cart failed'], 500);
             }
         }
@@ -40,9 +47,8 @@ class CartController extends Controller
             return response()->json(['message'=> 'Product not found'], 400);
         }
 
-        $result = $this->cartModel->addProductToCart($cartId, $product->id, $userId);
+        $result = $this->cartModel->addProductToCart($cartId, $product->id, $userId, $amount);
         if ($result){
-            $this->productModel->decreaseOne($productId);
             return response()->json(['message' => 'Add product to cart success', 'cart_id' => $result], 201);
         }
 

@@ -8,30 +8,33 @@ use Illuminate\Support\Facades\DB;
 
 class Cart extends Model
 {
-    public function addProductToCart($cartId, $productId, $userId)
+    public function addProductToCart($cartId, $productId, $userId, $quantity)
     {
         $cartFromDB = DB::table('carts')->where('id', $cartId)->where('product_id', $productId)->where('user_id', $userId)->first();
         if ($cartFromDB != null) {
-            DB::table('carts')->where('id', $cartId)->where('product_id', $productId)->where('user_id', $userId)->update(array('quantity' => $cartFromDB->quantity + 1));
+            DB::table('carts')->where('id', $cartId)->where('product_id', $productId)->where('user_id', $userId)->update(array('quantity' => $cartFromDB->quantity + $quantity));
             return $cartId;
         }
 
         return DB::table('carts')->insertGetId(
             [
-                'quantity' => 1,
+                'quantity' => $quantity,
                 'user_id' => $userId,
                 'product_id' => $productId,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'status' => 'PENDING',
             ]
         );
     }
 
-    public function addProductToNewCart($productId, $userId){
+    public function addProductToNewCart($productId, $userId, $quantity){
         return DB::table('carts')->insertGetId(
             [
-                'quantity' => 1,
+                'quantity' => $quantity,
                 'user_id' => $userId,
                 'product_id' => $productId,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'status' => 'PENDING',
             ]
         );
     }
@@ -62,5 +65,9 @@ class Cart extends Model
         $result['products'] = $products;
 
         return $result;
+    }
+
+    public function updateStatusCart($cartId, $status){
+        return DB::table('carts')->where('id', $cartId)->update([ 'status' => $status]);
     }
 }

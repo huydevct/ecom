@@ -6,12 +6,11 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
-class AddToCartRequest extends FormRequest
+class CreatePaymentRequest extends FormRequest
 {
     public function rules(){
         return [
-            'product_id' => 'required',
-            'amount' => 'required',
+            'cart_id' => 'required',
         ];
     }
 
