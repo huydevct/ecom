@@ -20,15 +20,15 @@ class Payment extends Model
 
             $amount = 0;
             $productIds = array();
-            foreach ($carts as $cart){
-                if ($cart->status == 'SUCCESS'){
+            foreach ($carts as $cart) {
+                if ($cart->status == 'SUCCESS') {
                     continue;
                 }
                 $amount += $cart->quantity;
                 array_push($productIds, $cart->product_id);
             }
 
-            if ($amount == 0){
+            if ($amount == 0) {
                 return 'Cart was checked out';
             }
 
@@ -36,14 +36,14 @@ class Payment extends Model
             $totalPrice = 0.00;
             $productsResult = [];
 
-            foreach ($products as $product){
-                foreach ($carts as $cart){
-                    if ($product->id == $cart->product_id){
-                         $price = $product->price * $cart->quantity;
-                         $totalPrice += $price;
-                         array_push($productsResult, [
-                             $product->id => $cart->quantity,
-                         ]);
+            foreach ($products as $product) {
+                foreach ($carts as $cart) {
+                    if ($product->id == $cart->product_id) {
+                        $price = $product->price * $cart->quantity;
+                        $totalPrice += $price;
+                        array_push($productsResult, [
+                            $product->id => $cart->quantity,
+                        ]);
                     }
                 }
             }
@@ -64,9 +64,9 @@ class Payment extends Model
                 'created_at' => $timeNow,
             ]);
 
-            foreach ($products as $product){
-                foreach ($carts as $cart){
-                    if ($product->id == $cart->product_id){
+            foreach ($products as $product) {
+                foreach ($carts as $cart) {
+                    if ($product->id == $cart->product_id) {
                         $price = $product->price * $cart->quantity;
                         DB::table('order_item')->insertGetId([
                             'quantity' => $cart->quantity,
@@ -92,7 +92,12 @@ class Payment extends Model
         }
     }
 
-    public function updateStatusPayment($paymentId, $status){
-        return DB::table('payments')->where('id', $paymentId)->update([ 'status' => $status]);
+    public function updateStatusPayment($paymentId, $status)
+    {
+        return DB::table('payments')->where('id', $paymentId)->update(['status' => $status, 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')]);
+    }
+
+    public function listHistoryPayment($userId){
+        return DB::table('payments')->where('user_id', $userId)->whereIn('status', ['SUCCESS','FAILED'])->get();
     }
 }

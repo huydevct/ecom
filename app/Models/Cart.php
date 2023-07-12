@@ -27,7 +27,8 @@ class Cart extends Model
         );
     }
 
-    public function addProductToNewCart($productId, $userId, $quantity){
+    public function addProductToNewCart($productId, $userId, $quantity)
+    {
         return DB::table('carts')->insertGetId(
             [
                 'quantity' => $quantity,
@@ -42,19 +43,19 @@ class Cart extends Model
     public function listCartById($cartId)
     {
         $carts = DB::table('carts')->where('id', $cartId)->get();
-        if (count($carts) == 0){
+        if (count($carts) == 0) {
             return null;
         }
 
         $productIds = array();
-        foreach ($carts as $cart){
+        foreach ($carts as $cart) {
             array_push($productIds, $cart->product_id);
         }
 
         $products = DB::table('products')->whereIn('id', $productIds)->get();
-        foreach ($products as $product){
-            foreach ($carts as $cart){
-                if ($product->id == $cart->product_id){
+        foreach ($products as $product) {
+            foreach ($carts as $cart) {
+                if ($product->id == $cart->product_id) {
                     $product->quantity = $cart->quantity;
                     unset($product->created_at, $product->updated_at);
                 }
@@ -67,7 +68,8 @@ class Cart extends Model
         return $result;
     }
 
-    public function updateStatusCart($cartId, $status){
-        return DB::table('carts')->where('id', $cartId)->update([ 'status' => $status]);
+    public function updateStatusCart($cartId, $status)
+    {
+        return DB::table('carts')->where('id', $cartId)->update(['status' => $status, 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')]);
     }
 }

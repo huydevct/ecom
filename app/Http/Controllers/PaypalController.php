@@ -70,7 +70,10 @@ class PaypalController extends Controller
                     $this->cartModel->updateStatusCart($cartId, 'SUCCESS');
 
                     foreach ($result['products'][0] as $key => $value) {
-                        $this->productModel->decrease($key, $value);
+                        $result = $this->productModel->decrease($key, $value);
+                        if ($result == "Out of stock"){
+                            return response()->json(['message' => "out of stock productID: ".$key], 400);
+                        }
                     }
 
                     redirect()->away($links['href']);
@@ -124,5 +127,14 @@ class PaypalController extends Controller
                 ->route('create.payment')
                 ->with('error', $response['message'] ?? 'Something went wrong.');
         }
+    }
+
+    public function listHistoryPayments(){
+        $userId = optional(auth()->user())->id;
+        if ($userId == null) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        return $this->paymentModel->listHistoryPayment($userId);
     }
 }

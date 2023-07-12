@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\PaypalController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,11 @@ Route::group([
 
     Route::post('/add-to-cart', [CartController::class, 'addProductToCart']);
     Route::post('/show-cart', [CartController::class, 'showCart']);
+
+    Route::post('/show-order', [OrderController::class, 'listOrderById']);
+    Route::post('/show-all-order', [OrderController::class, 'showOrders']);
+
+    Route::post('/show-history-payments', [PaypalController::class, 'listHistoryPayments']);
 
     Route::post('handle-payment', [PaypalController::class, 'handlePayment'])->name('make.payment');
 });
