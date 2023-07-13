@@ -70,8 +70,8 @@ class PaypalController extends Controller
                     $this->cartModel->updateStatusCart($cartId, 'SUCCESS');
 
                     foreach ($result['products'][0] as $key => $value) {
-                        $result = $this->productModel->decrease($key, $value);
-                        if ($result == "Out of stock"){
+                        $resp = $this->productModel->decrease($key, $value);
+                        if ($resp == "Out of stock"){
                             return response()->json(['message' => "out of stock productID: ".$key], 400);
                         }
                     }
