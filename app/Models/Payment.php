@@ -3,11 +3,15 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
+use Laravel\Sanctum\HasApiTokens;
 
 class Payment extends Model
 {
+    use HasApiTokens, HasFactory, Notifiable;
     public function pay($cartId, $userId, $payMethod)
     {
         DB::beginTransaction();
