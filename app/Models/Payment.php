@@ -102,6 +102,6 @@ class Payment extends Model
     }
 
     public function listHistoryPayment($userId){
-        return DB::table('payments')->where('user_id', $userId)->whereIn('status', ['SUCCESS','FAILED'])->get();
+        return DB::table('payments')->where('user_id', $userId)->whereIn('status', ['SUCCESS','FAILED'])->latest('id')->paginate(20);
     }
 }
